@@ -1,0 +1,19 @@
+.bg-night {
+  background: rgb(2, 0, 36);
+  background: radial-gradient(
+    circle,
+    rgba(2, 0, 36, 1) 10%,
+    rgba(1, 0, 45, 1) 75%,
+    rgba(9, 9, 121, 1) 100%
+  );
+}
+
+.bg-day {
+  background: rgb(0, 164, 203);
+  background: radial-gradient(
+    circle,
+    rgba(0, 164, 203, 1) 11%,
+    rgba(0, 187, 213, 1) 60%,
+    rgba(0, 146, 166, 1) 100%
+  );
+}
