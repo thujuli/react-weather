@@ -5,10 +5,9 @@ import { Weather } from "./types";
 import { listImages } from "./utils/import";
 
 export default function App() {
-  const [city, setCity] = useState<string>("jakarta");
+  const [city, setCity] = useState("jakarta");
   const [data, setData] = useState<Weather | null>(null);
-  const weatherIcon = data?.weather[0].icon;
-  const images = listImages.filter((image) => image.id === weatherIcon);
+  const [image, setImage] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -16,6 +15,10 @@ export default function App() {
           `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=5f353e479b6b09f6b73335b2c49fc1e7&units=metric`
         );
         const result = await data.json();
+        const images = listImages.filter(
+          (image) => image.id === result.weather[0].icon
+        );
+        setImage(images[0].image);
         setData(result);
       } catch (e) {
         console.log(e);
@@ -40,7 +43,7 @@ export default function App() {
             {data?.name.toUpperCase()}
           </h1>
           <img
-            src={images[0].image}
+            src={image}
             alt="Weather Icon"
             className="h-[150px] w-[150px] mx-auto mt-6"
           />
