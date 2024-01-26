@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import { Droplet, Cloud, Wind, Search } from "react-feather";
 import { Weather } from "./types";
@@ -8,6 +8,9 @@ export default function App() {
   const [city, setCity] = useState("jakarta");
   const [data, setData] = useState<Weather | null>(null);
   const [image, setImage] = useState("");
+  const [inputSearch, setInputSearch] = useState("");
+  const [isDay, setIsDay] = useState(true);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -18,6 +21,9 @@ export default function App() {
         const images = listImages.filter(
           (image) => image.id === result.weather[0].icon
         );
+        const day = images[0].id.charAt(images[0].id.length - 1);
+
+        setIsDay(day === "d" ? true : false);
         setImage(images[0].image);
         setData(result);
       } catch (e) {
@@ -26,18 +32,32 @@ export default function App() {
     };
     fetchData();
   }, [city]);
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    setCity(inputSearch);
+    setInputSearch("");
+  };
   return (
     <div className="container min-h-screen mx-auto flex justify-center items-center">
-      <div className="w-[400px] pt-8 pb-16 bg-day rounded-xl ">
-        <div className="bg-white/25 mx-4 h-12 rounded-lg relative flex items-center gap-2 ">
-          <button type="button" className="absolute left-2">
+      <div
+        className={`w-[400px] pt-8 pb-16 rounded-xl ${
+          isDay ? "bg-day" : "bg-night"
+        }`}
+      >
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white/25 mx-4 h-12 rounded-lg relative flex items-center gap-2"
+        >
+          <button type="submit" className="absolute left-2">
             <Search color="white" />
           </button>
           <input
             type="text"
             className="w-full h-full bg-transparent rounded-lg font-medium text-white focus:outline-none focus:bg-white/30 pl-10 pr-2"
+            value={inputSearch}
+            onChange={(e) => setInputSearch(e.target.value)}
           />
-        </div>
+        </form>
         <div className="mt-8 text-white text-center">
           <h1 className="text-3xl font-medium tracking-wider">
             {data?.name.toUpperCase()}
